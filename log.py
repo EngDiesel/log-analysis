@@ -64,13 +64,88 @@ def create_views():
     cursor.execute(create_log_error)
     conn.close()
 
+def get_most_popular_articles():
+    """
+    Returns most popular articles.
+    """
+    res = []
+    conn = Connect(db_name)
+    cursor = conn.cursor()
+    cursor.execute("select * from popular_articles limit 3;")
+    results = cursor.fetchall()
+    conn.close()
+    i = 1
+    for result in results:
+        obj = "\n" + str(i) + " ) '" +  str(result[0]) + "' -- " + str(result[1]) + " Views"
+        res.append(obj)
+        i += 1
 
-# creating the views
-try:
-    create_views()
-except psycopg2.Error as e:
-    print(str(e))
+def get_most_popular_articles_authors():
+    """
+    Returns the most popular articles' authors.
+    """
+    res = []
+    conn = Connect(db_name)
+    cursor = conn.cursor()
+    cursor.execute("select * from popular_articles_authors limit 3;")
+    results = cursor.fetchall()
+    conn.close()
+    i = 1
+    for result in results:
+        obj = "\n" + str(i) + " ) '" +  str(result[0]) + "' -- " + str(result[1]) + " Views"
+        res.append(obj)
+        i += 1
+
+    return res
+
+def get_log_error():
+    """
+    Returns the days with log errors more than 1%
+    """
+    res = []
+    conn = Connect(db_name)
+    cursor = conn.cursor()
+    cursor.execute("select * from log_error;")
+    results = cursor.fetchall()
+    conn.close()
+    i = 1
+    for result in results:
+        obj = "\n" + str(i) + " ) '" +  str(result[0]) + "' -- " + str(round(result[1], 1)) + " %"
+        res.append(obj)
+        i += 1
+
+    return res
 
 
 
-print('finish')
+
+def main():
+    # creating the views
+    try:
+        create_views()
+    except psycopg2.Error as e:
+        print(str(e))
+
+
+    #  Best 3 articles.
+    # print('\n\n---------------------------------------------------')
+    # res = get_most_popular_Bearticles()
+    # for obj in res:
+    #     print(obj)
+
+    #  Best 3 articles authors
+    # print('\n\n---------------------------------------------------')
+    # res = get_most_popular_articles_authors()
+    # for obj in res:
+    #     print(obj)
+
+
+     # Log Errors
+    # print('\n\n---------------------------------------------------')
+    # res = get_log_error()
+    # for obj in res:
+    #     print(obj)
+
+
+
+    main()
