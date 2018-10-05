@@ -5,6 +5,7 @@ __version__ = "1.0"
 
 # importing modules.
 import psycopg2
+import os
 
 # declearing global variables
 db_name = 'news'
@@ -36,6 +37,10 @@ sum((status != '200 OK')::int)::float as err
 from log group by date) as errors
 where err/total > 0.01;
 """
+
+# Clear the console
+def clear():
+    os.system('clear')
 
 # start the connection
 def Connect(database_name):
@@ -116,36 +121,36 @@ def get_log_error():
 
     return res
 
-
-
-
 def main():
+
     # creating the views
     try:
         create_views()
     except psycopg2.Error as e:
+        print('\n---------------------------------------------------\n')
         print(str(e))
+        print("---------------------------------------------------")
 
 
-    #  Best 3 articles.
-    # print('\n\n---------------------------------------------------')
-    # res = get_most_popular_Bearticles()
-    # for obj in res:
-    #     print(obj)
 
-    #  Best 3 articles authors
-    # print('\n\n---------------------------------------------------')
-    # res = get_most_popular_articles_authors()
-    # for obj in res:
-    #     print(obj)
+    # Best 3 articles.
+    print('\n\n---------------------------------------------------')
+    res = get_most_popular_articles()
+    for obj in res:
+        print(obj)
+
+     # Best 3 articles authors
+    print('\n\n---------------------------------------------------')
+    res = get_most_popular_articles_authors()
+    for obj in res:
+        print(obj)
 
 
      # Log Errors
-    # print('\n\n---------------------------------------------------')
-    # res = get_log_error()
-    # for obj in res:
-    #     print(obj)
+    print('\n\n---------------------------------------------------')
+    res = get_log_error()
+    for obj in res:
+        print(obj)
 
 
-
-    main()
+main()
