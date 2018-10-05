@@ -1,4 +1,5 @@
-# Version Control with Git
+# Udacity's Logs Analysis Project
+###  _Version Control with Git_
 
 This is the repo for [Udacity's Logs Analysis Project](). In the project, I have created a program where analyzer can view commands' result instead of typing query in database.
 
