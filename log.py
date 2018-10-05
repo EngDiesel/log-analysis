@@ -38,10 +38,6 @@ from log group by date) as errors
 where err/total > 0.01;
 """
 
-# Clear the console
-def clear():
-    os.system('clear')
-
 # start the connection
 def Connect(database_name):
     """
@@ -85,6 +81,8 @@ def get_most_popular_articles():
         res.append(obj)
         i += 1
 
+    return res
+
 def get_most_popular_articles_authors():
     """
     Returns the most popular articles' authors.
@@ -122,32 +120,31 @@ def get_log_error():
     return res
 
 def main():
-
     # creating the views
     try:
         create_views()
     except psycopg2.Error as e:
-        print('\n---------------------------------------------------\n')
-        print(str(e))
-        print("---------------------------------------------------")
-
+        # Views already exist.
+        print()
 
 
     # Best 3 articles.
-    print('\n\n---------------------------------------------------')
+    print("\n\n---------------- 1) Most popular three articles of all time ? ----------------")
     res = get_most_popular_articles()
     for obj in res:
         print(obj)
 
+
+
      # Best 3 articles authors
-    print('\n\n---------------------------------------------------')
+    print('\n\n---------------- 2) Most popular article authors of all time ? ---------------')
     res = get_most_popular_articles_authors()
     for obj in res:
         print(obj)
 
 
      # Log Errors
-    print('\n\n---------------------------------------------------')
+    print('\n\n--------- On which days did more than 1% of requests lead to er---------------')
     res = get_log_error()
     for obj in res:
         print(obj)
