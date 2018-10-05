@@ -50,7 +50,6 @@ def Connect(database_name):
         error_message = 'We are sorry for that but we can not connect to database with this error... \n' + str(e)
         return error_message
 
-
 # Create views
 def create_views():
     """
@@ -72,7 +71,14 @@ def get_most_popular_articles():
     res = []
     conn = Connect(db_name)
     cursor = conn.cursor()
-    cursor.execute("select * from popular_articles limit 3;")
+
+    query = """select articles.title, count(log.ip) as views
+    from log join articles
+    on log.path = concat('/article/', articles.slug)
+    group by articles.title
+    order by views desc limit 3;"""
+
+    cursor.execute(query)
     results = cursor.fetchall()
     conn.close()
     i = 1
@@ -90,7 +96,13 @@ def get_most_popular_articles_authors():
     res = []
     conn = Connect(db_name)
     cursor = conn.cursor()
-    cursor.execute("select * from popular_articles_authors limit 3;")
+    query = """
+        select authors.name, count(log.ip) as views from log,
+        authors, articles where articles.author = authors.id and
+        CONCAT('/article/',articles.slug) = log.path
+        group by authors.name order by views desc limit 3;
+    """
+    cursor.execute(query)
     results = cursor.fetchall()
     conn.close()
     i = 1
@@ -108,7 +120,18 @@ def get_log_error():
     res = []
     conn = Connect(db_name)
     cursor = conn.cursor()
-    cursor.execute("select * from log_error;")
+
+    query = """
+        select to_char(date, 'FMMonth FMDD, YYYY'),
+        (err/total) * 100 as ratio
+        from (select time::date as date,
+        count(*) as total,
+        sum((status != '200 OK')::int)::float as err
+        from log group by date) as errors
+        where err/total > 0.01;
+    """
+
+    cursor.execute(query)
     results = cursor.fetchall()
     conn.close()
     i = 1
@@ -144,10 +167,12 @@ def main():
 
 
      # Log Errors
-    print('\n\n--------- On which days did more than 1% of requests lead to er---------------')
+    print('\n\n------- On which days did more than 1% of requests lead to error ? -----------')
     res = get_log_error()
     for obj in res:
         print(obj)
 
+    print()
 
+    
 main()
