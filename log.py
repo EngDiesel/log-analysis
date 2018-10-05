@@ -5,7 +5,9 @@ __version__ = "1.0"
 
 # importing modules.
 import psycopg2
-import os
+# import os
+# import sys
+# import io
 
 # declearing global variables
 db_name = 'news'
@@ -102,28 +104,43 @@ def get_log_error():
 
 def main():
 
+    try:
+        outputfile = open('output.txt', 'w')
+    except Exception as e:
+        print(str(e))
+
     # Best 3 articles.
     print("\n\n---------------- 1) Most popular three articles of all time ? ----------------")
+    outputfile.write("\n\n---------------- 1) Most popular three articles of all time ? ----------------")
     res = get_most_popular_articles()
     for obj in res:
         print(obj)
+        outputfile.write(obj)
 
 
 
      # Best 3 articles authors
     print('\n\n---------------- 2) Most popular article authors of all time ? ---------------')
+    outputfile.write('\n\n---------------- 2) Most popular article authors of all time ? ---------------')
     res = get_most_popular_articles_authors()
     for obj in res:
         print(obj)
+        outputfile.write(obj)
+
 
 
      # Log Errors
     print('\n\n------- On which days did more than 1% of requests lead to error ? -----------')
+    outputfile.write('\n\n------- On which days did more than 1% of requests lead to error ? -----------')
     res = get_log_error()
     for obj in res:
         print(obj)
+        outputfile.write(obj)
+
 
     print()
+    outputfile.write('\n')
+    outputfile.close()
 
 
 main()
