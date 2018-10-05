@@ -8,7 +8,7 @@ This repo contains the source code of a Logs Analysis project.
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Creator](#creators)
+* [Developer](#developer)
 
 ## Instructions
 
@@ -30,12 +30,12 @@ This repo contains the source code of a Logs Analysis project.
 * ### Installation (Run program)
  >* clone the project
  >* open terminal in project directory
- >* go in news directory. using ``` cd news ``` in terminal
- >* run ``` python newsdb.py ``` or ``` python3 news.py ```
+ >* go in project-1-logs-analysis directory. using ``` cd project-1-logs-analysis ``` in terminal
+ >* run ``` python log.py ``` or ``` python3 log.py ```
 
 ## Output
 
- * [Click here to see output.txt file]().
+ * [Click here to see output.txt file](https://github.com/EngDiesel/log-analysis/blob/master/output.txt).
 
 ## Developer
 
