@@ -48,8 +48,8 @@ def get_most_popular_articles():
     conn.close()
     i = 1
     for result in results:
-        obj = "\n" + str(i) + " ) '" + str(result[0]) + "' -- "
-        + str(result[1]) + " Views"
+        temp = str(result[0]) + "' -- " + str(result[1])
+        obj = "\n" + str(i) + " ) '" + temp + " Views"
         res.append(obj)
         i += 1
 
@@ -74,8 +74,8 @@ def get_most_popular_articles_authors():
     conn.close()
     i = 1
     for result in results:
-        obj = "\n" + str(i) + " ) '" + str(result[0])
-        + "' -- " + str(result[1]) + " Views"
+        temp = str(result[0]) + "' -- " + str(result[1])
+        obj = "\n" + str(i) + " ) '" + temp + " Views"
         res.append(obj)
         i += 1
 
@@ -105,8 +105,8 @@ def get_log_error():
     conn.close()
     i = 1
     for result in results:
-        obj = "\n" + str(i) + " ) '" + str(result[0])
-        + "' -- " + str(round(result[1], 1)) + " %"
+        temp = str(result[0]) + "' -- " + str(round(result[1], 1))
+        obj = "\n" + str(i) + " ) '" + temp + " %"
         res.append(obj)
         i += 1
 
@@ -122,10 +122,10 @@ def main():
 
     # Best 3 articles.
     print("\n\n---------------- 1) Most popular three articles of all time ?\
-     ----------------")
+ ----------------")
 
     outputfile.write("\n\n---------------- \
-    1) Most popular three articles of all time ? ----------------")
+ 1) Most popular three articles of all time ? ----------------")
     res = get_most_popular_articles()
     for obj in res:
         print(obj)
@@ -133,7 +133,7 @@ def main():
 
     # Best 3 articles authors
     print('\n\n---------------- 2) Most popular article\
-     authors of all time ? ---------------')
+ authors of all time ? ---------------')
 
     outputfile.write('\n\n---------------- 2) Most popular article\
      authors of all time ? ---------------')
@@ -144,10 +144,10 @@ def main():
 
     # Log Errors
     print('\n\n------- On which days did more than 1% of\
-     requests lead to error ? -----------')
+ requests lead to error ? -----------')
 
     outputfile.write('\n\n------- On which days did more than 1% of\
-     requests lead to error ? -----------')
+ requests lead to error ? -----------')
 
     res = get_log_error()
     for obj in res:
