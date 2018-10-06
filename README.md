@@ -1,49 +1,110 @@
-# Udacity's Logs Analysis Project
-###  _Version Control with Git_
+#  Logs Analysis Project
 
-This is the repo for [Udacity's Logs Analysis Project](). In the project, I have created a program where analyzer can view commands' result instead of typing query in database.
+This is Udacity's Full Stack Web Developer Nanodegree's first project **[Logs Analysis](#)** .
+In the project, I have created a program where _Analyzer_ can view commands' result instead of typing query in **database**.
 
-This repo contains the source code of a Logs Analysis project.
+### Project Requirements
+* Reporting tool should answer the following questions:
+ 	* What are the most popular three articles of all time?
+ 	* Who are the most popular article authors of all time?
+ 	* On which days did more than 1% of requests lead to errors?
 
-## Table of Contents
+* Project follows good SQL coding practices: Each question should be answered with a single database query.
+* The code is error free and conforms to the   [pycodestyle](https://pypi.org/project/pycodestyle/) style recommendations.
+* The code presents its output in clearly formatted _plain text_ .
 
-* [Instructions](#instructions)
-* [Developer](#developer)
+### Dependencies.
+This program requires some other software programs to run properly .
 
-## Instructions
+* **Python** Programming Language version 3 [click here](https://www.python.org/) to download .
+* **PostgreSQL** Database [click here](https://www.postgresql.org/) to download .
+* **Virtual Box** to manage virtual machines [click here ](https://www.virtualbox.org/wiki/Downloads) to download .
+* **Vagrant** development environment [click here](https://www.vagrantup.com/) to download .
+* **News** database schema [click here](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip) to download
 
-* ### Set-up Instructions
-	1. Create the news database in PostgreSQL
-		* From the command line, launch the psql console by typing: psql
-		* Check to see if a _news database already exists_ by listing all databases with the command: ``` \l ```
-		* If a news database already exists, drop it with the command: ``` DROP DATABASE news; ```
-		* Create the _news_ database with the command: ``` CREATE DATABASE news; ```
-		* exit the console by typing: ``` \q ``` or press ``` ctrl + d ```
-	2. Download the schema and data for the _news_ database:
-		* [Click here to download it](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip)
-	3. Unzip the downloaded file. ``` unzip newsdata.zip ```.
-		* You should now have an sql script file with the name _newsdata.sql_.
-	4. From the command line, navigate to the directory containing _newsdata.sql_ using ``` cd ``` command.
-	5. Import the schema and data in _newsdata.sql_ to the news database by typing: ``` psql -d news -f newsdata.sql ```
+##### After installing all dependencies make sure it's all ok .
+Write `python --version` into your terminal if you have output like `python 3.X.X` then it's ok, to check the vagrant type `vagrant --version` the output must be like `Vagrant 2.X.X`, type `virtualbox` into your terminal then you will find it open up if your Installation process was ok and finally type `psql --version` to your terminal if you had something like `psql (PostgreSQL) 9.5.14` now i can tell you _"you'r good to go ."_
 
 
-* ### Installation (Run program)
- >* clone the project
- >* open terminal in project directory
- >* go in project-1-logs-analysis directory. using ``` cd project-1-logs-analysis ``` in terminal
- >* run ``` python log.py ``` or ``` python3 log.py ```
+### Quick Start
+After downloading the **news database schema** extract it, you will find **_newsdata.sql_** file add it to your project directory.
+* Open your shell terminal
+* run `vagrant up` to start the virtual machine .
+* then `vagrant ssh` to login to virtual machine .
+* `cd` into your preferred directory to download the project
+* Clone this repo by typing `git clone https://github.com/EngDiesel/log-analysis.git`
+* Then go to the project directory by typing `cd log-analysis/` in your terminal .
 
-## Output
+Now time to use the **PostgreSQL Database** .
+* Type `psql -d news -f newsdata.sql` into your terminal to prepare the _database_.
 
- * [Click here to see output.txt file](https://github.com/EngDiesel/log-analysis/blob/master/output.txt).
+Now time to use our **Log Analysis Program** .
+* Type `python3 log.py` in your terminal to run the program.
 
-## Developer
+this will give you the **OUTPUT.txt** file modified with the output.
+
+
+### Output
+
+this is an example for how output must be
+
+  [Click here](https://github.com/EngDiesel/log-analysis/blob/master/output.txt) to see output.txt file .
+
+  	---------------- 1) Most popular three articles of all time ? ----------------
+
+  	1 ) 'Candidate is jerk, alleges rival' -- 338647 Views
+
+  	2 ) 'Bears love berries, alleges bear' -- 253801 Views
+
+  	3 ) 'Bad things gone, say good people' -- 170098 Views
+
+  	---------------- 2) Most popular article authors of all time ? ---------------
+
+  	1 ) 'Ursula La Multa' -- 507594 Views
+
+  	2 ) 'Rudolf von Treppenwitz' -- 423457 Views
+
+  	3 ) 'Anonymous Contributor' -- 170098 Views
+
+  	-------- On which days did more than 1% of requests lead to error ? ----------
+
+  	1 ) 'July 17, 2016' -- 2.3 %
+
+
+### Queries Used
+
+* 1) Most popular three articles of all time ?
+```sql
+select articles.title, count(log.ip) as views
+from log join articles
+on log.path = concat('/article/', articles.slug)
+group by articles.title
+order by views desc limit 3;
+```
+
+
+* 2) Most popular article authors of all time ?
+```sql
+select authors.name, count(log.ip) as views
+from log, authors, articles
+where articles.author = authors.id
+and CONCAT('/article/',articles.slug) = log.path
+group by authors.name order by views desc limit 3;
+```
+
+* On which days did more than 1% of requests lead to error ?
+```sql
+select to_char(date, 'FMMonth FMDD, YYYY'),
+        (err/total) * 100 as ratio
+from (select time::date as date, count(*) as total,
+        sum((status != '200 OK')::int)::float as err
+from log group by date) as errors
+where err/total > 0.01;
+```
+
+### Contributors
 
 * Mostafa Yasin
-    - [Github](https://github.com/EngDiesel)
-    - [Facebook](https://fb.com/mostafa.yasin.2013)
-
-Required software:
-
-* Python
-* PostgreSQL
+	 * [Github](https://github.com/EngDiesel)
+	 * [Facebook](https://fb.com/mostafa.yasin.2013)
+	 * [Twitter](https://twitter.com/_mostafayasin_)
